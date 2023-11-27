@@ -1,10 +1,5 @@
-import keyword
 import sys
 import time
-import token
-from urllib import request
-
-#UNSURE IF PARSER OR LEXER SHOULD MAKE VARIABLES
 
 ID, INT, SLIT, VAR, OP, EOF = "ID", "INT", "SLIT", "VAR", "OP", "EOF"
 KEYWORDS = ["request","become","output","ask","for","value"]
@@ -40,10 +35,6 @@ class Lexer:
 		self.text = file.readlines()
 		self.text[-1] = self.text[-1] + '\n'
 	def get_next_token(self,lineNum):
-		#want a boolean or something that 
-		#is true when the last token was
-		#request, signifying that the 
-		#lexer is now finding a variable
 		global tokenLocation
 		global currentVariableName
 		print(self.text)
@@ -53,23 +44,24 @@ class Lexer:
 			return 1
 		word = ""
 
-		print("bracket: " + str(self.isFindBracket))
 		#Base token
 		if(self.isFindVar == False and self.isFindVarVal == False and self.isFindBracket == False):
 			for x in range(tokenLocation, len(line)):
 				word = word + line[x]
 				if(word in KEYWORDS):
 					#print(word[len(word)-5:len(word)])
-					if(word == "request"):
-						self.isFindVar = True
-					if(word == "become"):
-						self.isFindVarVal = True
-					if(word == "output"):
-						self.isFindBracket = True
-					if(word == "ask"):
-						self.isFindVar = True
-					if(word == "value"):
-						self.isFindBracket = True
+					#Change this to a switch case
+					match word:
+						case "request":
+							self.isFindVar = True
+						case "become":
+							self.isFindVarVal = True
+						case "output":
+							self.isFindBracket = True
+						case "ask":
+							self.isFindVar = True
+						case "value":
+							self.isFindBracket = True
 					tokenLocation = x+1
 					tokens.append(Token(word,KEYWORD_TO_TYPE[word]))
 				print(word)
@@ -114,7 +106,7 @@ class Lexer:
 					tokens.append(Token(word,OP))
 				print(word)
 			self.isFindBracket = False
-			
+
 		#print("Nexttoken " + str(line[tokenLocation]))
 		try:
 			if(line[tokenLocation] == '\n'):
